@@ -45,6 +45,30 @@ var server = http.createServer((request, response) => {
                     break;
             }
             break;
+
+        case 'categories':
+            switch (method) {
+                case 'OPTIONS':
+                    respondToOptions(request, response);
+                    break;
+                case 'GET':
+                    getCategories(request, response);
+                    break;
+                case 'POST':
+                    // postPost(request, response);
+                    break;
+                case 'PATCH':
+                    // updatePost(request, response);
+                    break;
+                case 'DELETE':
+                    // deletePost(request, response, key);
+                    break;
+                default:
+                    console.log('Request not processed 3.');
+                    send404(request, response);
+                    break;
+            }
+            break;
         default:
             console.log('Request not processed 2.');
             send404(request, response);
@@ -69,10 +93,6 @@ function loadData() {
     });
 }
 
-function loadVenues(){
-    
-}
-
 function saveVenues(venues) {
     return new Promise((resolve, reject) => {
         fs.writeFile(path.resolve(process.cwd(), './data/venues.json'), JSON.stringify(venues), (err) => {
@@ -80,7 +100,21 @@ function saveVenues(venues) {
                 reject();
             } else {
                 console.log(JSON.stringify(venues));
-                
+
+                resolve();
+            }
+        });
+    });
+}
+
+function saveCategories(categories) {
+    return new Promise((resolve, reject) => {
+        fs.writeFile(path.resolve(process.cwd(), './data/categories.json'), JSON.stringify(categories), (err) => {
+            if (err) {
+                reject();
+            } else {
+                console.log(JSON.stringify(categories));
+
                 resolve();
             }
         });
@@ -130,8 +164,42 @@ function getVenues(request, response) {
         data.response.groups[0].items.forEach(element => {
             dataResp.push(element.venue);
         });
-        
+
         saveVenues(dataResp).then(() => {
+
+        }).catch(() => {
+            send404(request, response);
+        });
+
+
+        response.write(JSON.stringify(dataResp));
+        response.end();
+
+    }).catch(() => {
+        send404(request, response);
+    });
+}
+
+function getCategories(request, response) {
+    loadData().then((data) => {
+        response.writeHead(200, {
+            'Content-Type': 'application/json'
+        });
+        let dataResp = [];
+
+
+        // for (let index = 0; index < data.response.groups[0].items.length; index++) {
+        //     dataResp[index] = data.response.groups[0].items[index];    
+        // }
+
+        data.response.groups[0].items.forEach(element => {
+            element.venue.categories.forEach(element2 => {
+                dataResp.push(element2);
+
+            });
+        });
+
+        saveCategories(dataResp).then(() => {
 
         }).catch(() => {
             send404(request, response);
