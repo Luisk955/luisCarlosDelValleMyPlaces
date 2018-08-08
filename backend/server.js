@@ -154,12 +154,8 @@ function getVenues(request, response) {
         response.writeHead(200, {
             'Content-Type': 'application/json'
         });
+        
         let dataResp = [];
-
-
-        // for (let index = 0; index < data.response.groups[0].items.length; index++) {
-        //     dataResp[index] = data.response.groups[0].items[index];    
-        // }
 
         data.response.groups[0].items.forEach(element => {
             let tempElement = {};
