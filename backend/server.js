@@ -162,7 +162,29 @@ function getVenues(request, response) {
         // }
 
         data.response.groups[0].items.forEach(element => {
-            dataResp.push(element.venue);
+            let tempElement = {};
+            tempElement.id = element.venue.id;
+            tempElement.name = element.venue.name;
+            tempElement.location = {
+                'address': element.venue.location.country,
+                'lat': element.venue.location.lat,
+                'lng': element.venue.location.lng,
+                'city': element.venue.location.city,
+                'state': element.venue.location.state,
+                'country': element.venue.location.country
+            };
+
+            element.venue.categories.forEach(element2 => {
+                if (tempElement.categories) {
+                    tempElement.categories.push(element2);
+
+                } else {
+                    tempElement.categories = [];
+                    tempElement.categories.push(element2.id);
+
+                }
+            });
+            dataResp.push(tempElement);
         });
 
         saveVenues(dataResp).then(() => {
