@@ -30,15 +30,6 @@ var server = http.createServer((request, response) => {
                 case 'GET':
                     getVenues(request, response);
                     break;
-                case 'POST':
-                    postPost(request, response);
-                    break;
-                case 'PATCH':
-                    updatePost(request, response);
-                    break;
-                case 'DELETE':
-                    deletePost(request, response, key);
-                    break;
                 default:
                     console.log('Request not processed 1.');
                     send404(request, response);
@@ -53,15 +44,6 @@ var server = http.createServer((request, response) => {
                     break;
                 case 'GET':
                     getCategories(request, response);
-                    break;
-                case 'POST':
-                    // postPost(request, response);
-                    break;
-                case 'PATCH':
-                    // updatePost(request, response);
-                    break;
-                case 'DELETE':
-                    // deletePost(request, response, key);
                     break;
                 default:
                     console.log('Request not processed 3.');
@@ -154,7 +136,7 @@ function getVenues(request, response) {
         response.writeHead(200, {
             'Content-Type': 'application/json'
         });
-        
+
         let dataResp = [];
 
         data.response.groups[0].items.forEach(element => {
@@ -172,7 +154,7 @@ function getVenues(request, response) {
 
             element.venue.categories.forEach(element2 => {
                 if (tempElement.categories) {
-                    tempElement.categories.push(element2);
+                    tempElement.categories.push(element2.id);
 
                 } else {
                     tempElement.categories = [];
@@ -231,6 +213,22 @@ function getCategories(request, response) {
         send404(request, response);
     });
 }
+
+// function postCategorie(request, response) {
+//     let buffer = [];
+//     let categorie = null;
+
+//     request.on('data', (chunk) => {
+//         console.log(chunk);
+//         buffer.push(chunk);
+
+//     });
+
+//     request.on('end', () => {
+//         buffer = Buffer.concat(buffer).toString;
+//         categorie = JSON.parse(buffer);
+//     });
+// }
 
 // function postPost(request, response) {
 
